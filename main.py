@@ -74,4 +74,10 @@ async def get_list(
         response = response.filter_by(pattern=pattern)
     
     return response.all()
-    
+
+@app.get('/breeds/{id}', response_model=schemas.CatBreed, status_code=200, tags=['Breeds'])
+async def get_detail(id: int, db: Session = Depends(get_db)):
+    response = db.query(models.Breed).filter_by(id=id).first()
+    if not response:
+        raise HTTPException(status_code=404, detail=f"Breed with id {id} does not exist")
+    return response
