@@ -1,5 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
-from pydantic.networks import HttpUrl
+from fastapi import FastAPI, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
 import models, schemas
@@ -22,15 +21,15 @@ def get_db():
 
 
 @app.post(
-    "/breeds", response_model=List[schemas.CatBreed], status_code=201, tags=["Breeds"]
+    "/breeds", response_model=List[schemas.CatBreed], status_code=status.HTTP_201_CREATED, tags=["Breeds"]
 )
-async def create(request: List[schemas.CatBreed], db: Session = Depends(get_db)):  
+async def create(request: List[schemas.CatBreed], db: Session = Depends(get_db)):
     response_breeds: List[models.Breed] = []
 
     for breed in request:
         if db.query(models.Breed).filter_by(name=breed.name).first():
             raise HTTPException(
-                status_code=400, detail="Breed with this name already exists"
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Breed with this name already exists"
             )
 
         new_breed = models.Breed(
@@ -50,7 +49,7 @@ async def create(request: List[schemas.CatBreed], db: Session = Depends(get_db))
 
 
 @app.get(
-    "/breeds", response_model=List[schemas.CatBreed], status_code=200, tags=["Breeds"]
+    "/breeds", response_model=List[schemas.CatBreed], status_code=status.HTTP_200_OK, tags=["Breeds"]
 )
 async def get_list(
     name: str = None,
@@ -72,12 +71,17 @@ async def get_list(
         response = response.filter_by(body_type=body_type)
     if pattern:
         response = response.filter_by(pattern=pattern)
-    
+
     return response.all()
 
-@app.get('/breeds/{id}', response_model=schemas.CatBreed, status_code=200, tags=['Breeds'])
+
+@app.get(
+    "/breeds/{id}", response_model=schemas.CatBreed, status_code=status.HTTP_200_OK, tags=["Breeds"]
+)
 async def get_detail(id: int, db: Session = Depends(get_db)):
     response = db.query(models.Breed).filter_by(id=id).first()
     if not response:
-        raise HTTPException(status_code=404, detail=f"Breed with id {id} does not exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Breed with id {id} does not exist"
+        )
     return response
