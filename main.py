@@ -23,7 +23,10 @@ def get_db():
 
 
 @app.post(
-    "/breeds", response_model=List[schemas.CatBreed], status_code=status.HTTP_201_CREATED, tags=["Breeds"]
+    "/breeds",
+    response_model=List[schemas.CatBreed],
+    status_code=status.HTTP_201_CREATED,
+    tags=["Breeds"],
 )
 async def create(request: List[schemas.CatBreed], db: Session = Depends(get_db)):
     response_breeds: List[models.Breed] = []
@@ -31,7 +34,8 @@ async def create(request: List[schemas.CatBreed], db: Session = Depends(get_db))
     for breed in request:
         if db.query(models.Breed).filter_by(name=breed.name).first():
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Breed with this name already exists"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Breed with this name already exists",
             )
 
         new_breed = models.Breed(
@@ -51,7 +55,10 @@ async def create(request: List[schemas.CatBreed], db: Session = Depends(get_db))
 
 
 @app.get(
-    "/breeds", response_model=List[schemas.CatBreed], status_code=status.HTTP_200_OK, tags=["Breeds"]
+    "/breeds",
+    response_model=List[schemas.CatBreed],
+    status_code=status.HTTP_200_OK,
+    tags=["Breeds"],
 )
 async def get_list(
     name: str = None,
@@ -78,31 +85,72 @@ async def get_list(
 
 
 @app.get(
-    "/breeds/{id}", response_model=schemas.CatBreed, status_code=status.HTTP_200_OK, tags=["Breeds"]
+    "/breeds/{id}",
+    response_model=schemas.CatBreed,
+    status_code=status.HTTP_200_OK,
+    tags=["Breeds"],
 )
 async def get_detail(id: int, db: Session = Depends(get_db)):
     response = db.query(models.Breed).filter_by(id=id).first()
     if not response:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Breed with id {id} does not exist"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Breed with id {id} does not exist",
         )
     return response
 
+
 @app.put(
-    "/breeds/{id}", response_model=schemas.CatBreed, status_code=status.HTTP_200_OK, tags=["Breeds"]
+    "/breeds/{id}",
+    response_model=schemas.CatBreed,
+    status_code=status.HTTP_200_OK,
+    tags=["Breeds"],
 )
-async def update(id: int, request: schemas.CatBreed, db: Session = Depends(get_db)):    
+async def update(id: int, request: schemas.CatBreed, db: Session = Depends(get_db)):
     db_breed = db.query(models.Breed).filter_by(id=id)
 
     if not db_breed.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Breed with id {id} does not exist")
-        
-    if db.query(models.Breed).filter_by(name=name).first():
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Breed with this name already exists")
-    
-    db_breed.update(request.dict(exclude={'id'}))
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Breed with id {id} does not exist",
+        )
+
+    if db.query(models.Breed).filter_by(name=request.name).first():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Breed with this name already exists",
+        )
+
+    db_breed.update(request.dict(exclude={"id"}))
     db.commit()
 
     return db.query(models.Breed).filter_by(id=id).first()
-    
 
+
+@app.patch(
+    "/breeds/{id}",
+    response_model=schemas.CatBreed,
+    status_code=status.HTTP_200_OK,
+    tags=["Breeds"],
+)
+async def partially_update(
+    id: int, request: schemas.CatBreedUpdate, db: Session = Depends(get_db)
+):
+    db_breed = db.query(models.Breed).filter_by(id=id)
+
+    if not db_breed.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Breed with id {id} does not exist",
+        )
+
+    if request.name:
+        if db.query(models.Breed).filter_by(name=request.name).first():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Breed with this name already exists",
+            )
+
+    db_breed.update(request.dict(exclude_unset=True))
+
+    return db.query(models.Breed).filter_by(id=id).first()
