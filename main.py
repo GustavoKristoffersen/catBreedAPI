@@ -1,5 +1,7 @@
+from logging import raiseExceptions
 from fastapi import FastAPI, HTTPException, Depends, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, query
+from starlette.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 
 import models, schemas
 from database import SessionLocal, engine
@@ -85,3 +87,22 @@ async def get_detail(id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Breed with id {id} does not exist"
         )
     return response
+
+@app.put(
+    "/breeds/{id}", response_model=schemas.CatBreed, status_code=status.HTTP_200_OK, tags=["Breeds"]
+)
+async def update(id: int, request: schemas.CatBreed, db: Session = Depends(get_db)):    
+    db_breed = db.query(models.Breed).filter_by(id=id)
+
+    if not db_breed.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Breed with id {id} does not exist")
+        
+    if db.query(models.Breed).filter_by(name=name).first():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Breed with this name already exists")
+    
+    db_breed.update(request.dict(exclude={'id'}))
+    db.commit()
+
+    return db.query(models.Breed).filter_by(id=id).first()
+    
+
