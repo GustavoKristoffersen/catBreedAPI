@@ -1,14 +1,15 @@
 from sqlalchemy import Column, Integer, String, Numeric
+from sqlalchemy.sql.schema import CheckConstraint
 
 from database import Base
 
 
 class Breed(Base):
-    __tablename__ = "breeds"
+    __tablename__ = "breed"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
+    name = Column(String, unique=True)
     location_of_origin = Column(String)
-    coat_length = Column(Numeric)
+    coat_length = Column(Numeric, CheckConstraint("coat_length > 0"))
     body_type = Column(String)
     pattern = Column(String)
