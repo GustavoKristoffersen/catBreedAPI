@@ -93,7 +93,9 @@ async def get_detail(id: int, db: Session = Depends(get_db)):
     status_code=status.HTTP_200_OK,
     tags=["Breeds"],
 )
-async def update(id: int, request: schemas.CatBreedUpdate, db: Session = Depends(get_db)):
+async def update(
+    id: int, request: schemas.CatBreedUpdate, db: Session = Depends(get_db)
+):
     response = crud.update_breed(id=id, breed=request, db=db)
 
     return response
@@ -105,13 +107,17 @@ async def update(id: int, request: schemas.CatBreedUpdate, db: Session = Depends
     status_code=status.HTTP_200_OK,
     tags=["Breeds"],
 )
-async def partially_update(id: int, request: schemas.CatBreedUpdate, db: Session = Depends(get_db)):
+async def partially_update(
+    id: int, request: schemas.CatBreedUpdate, db: Session = Depends(get_db)
+):
     response = crud.partially_update_breed(id=id, breed=request, db=db)
 
     return response
 
 
-@app.delete("/breeds/{id}", response_model=dict, status_code=status.HTTP_200_OK, tags=["Breeds"])
+@app.delete(
+    "/breeds/{id}", response_model=dict, status_code=status.HTTP_200_OK, tags=["Breeds"]
+)
 async def destroy(id: int, db: Session = Depends(get_db)):
     if crud.delete_breed(id=id, db=db):
         return {"message": f"item with id {id} deleted"}
