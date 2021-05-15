@@ -1,6 +1,7 @@
-from api import schemas
 from fastapi import status, HTTPException
 from sqlalchemy.orm import Session
+
+from . import schemas
 from . import models
 
 
@@ -19,7 +20,7 @@ def create_breed(breed: schemas.CatBreed, db: Session):
         pattern=breed.pattern,
     )
 
-    db.add(new_breed)
+    db.add(new_breed, _warn=False)
     db.commit()
 
     return new_breed
