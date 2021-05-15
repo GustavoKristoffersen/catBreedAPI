@@ -20,7 +20,7 @@ def create_breed(breed: schemas.CatBreed, db: Session):
         pattern=breed.pattern,
     )
 
-    db.add(new_breed, _warn=False)
+    db.add(new_breed)
     db.commit()
 
     return new_breed
@@ -82,7 +82,8 @@ def partially_update_breed(id: int, breed: schemas.CatBreed, db: Session):
             )
 
     db_breed.update(breed.dict(exclude_unset=True))
-
+    db.commit()
+    
     return db.query(models.Breed).filter_by(id=id).first()
 
 
