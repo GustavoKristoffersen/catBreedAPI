@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Numeric
 from sqlalchemy.sql.schema import CheckConstraint
 
-from database import Base
+from .database import Base
 
 
 class Breed(Base):
