@@ -5,7 +5,7 @@ from . import schemas
 from . import models
 
 
-def create_breed(breed: schemas.CatBreed, db: Session):
+def create_breed(breed: schemas.CatBreedRequest, db: Session):
     if db.query(models.Breed).filter_by(name=breed.name).first():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -42,7 +42,7 @@ def get_single_breed(id: int, db: Session):
     return db_breed
 
 
-def update_breed(id: int, breed: schemas.CatBreed, db: Session):
+def update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
     db_breed = db.query(models.Breed).filter_by(id=id)
 
     if not db_breed.first():
@@ -64,7 +64,7 @@ def update_breed(id: int, breed: schemas.CatBreed, db: Session):
     return db.query(models.Breed).filter_by(id=id).first()
 
 
-def partially_update_breed(id: int, breed: schemas.CatBreed, db: Session):
+def partially_update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
     db_breed = db.query(models.Breed).filter_by(id=id)
 
     if not db_breed.first():

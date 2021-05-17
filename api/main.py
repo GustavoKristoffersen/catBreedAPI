@@ -22,12 +22,12 @@ def get_db():
 
 @app.post(
     "/breeds",
-    response_model=Union[List[schemas.CatBreed], schemas.CatBreed],
+    response_model=Union[List[schemas.CatBreedResponse], schemas.CatBreedResponse],
     status_code=status.HTTP_201_CREATED,
     tags=["Breeds"],
 )
 async def create(
-    request: Union[List[schemas.CatBreed], schemas.CatBreed],
+    request: Union[List[schemas.CatBreedRequest], schemas.CatBreedRequest],
     db: Session = Depends(get_db),
 ):
     if type(request) == list:
@@ -47,7 +47,7 @@ async def create(
 
 @app.get(
     "/breeds",
-    response_model=List[schemas.CatBreed],
+    response_model=List[schemas.CatBreedResponse],
     status_code=status.HTTP_200_OK,
     tags=["Breeds"],
 )
@@ -77,7 +77,7 @@ async def get_list(
 
 @app.get(
     "/breeds/{id}",
-    response_model=schemas.CatBreed,
+    response_model=schemas.CatBreedResponse,
     status_code=status.HTTP_200_OK,
     tags=["Breeds"],
 )
@@ -89,7 +89,7 @@ async def get_detail(id: int, db: Session = Depends(get_db)):
 
 @app.put(
     "/breeds/{id}",
-    response_model=schemas.CatBreed,
+    response_model=schemas.CatBreedResponse,
     status_code=status.HTTP_200_OK,
     tags=["Breeds"],
 )
@@ -101,7 +101,7 @@ async def update(id: int, request: schemas.CatBreedUpdate, db: Session = Depends
 
 @app.patch(
     "/breeds/{id}",
-    response_model=schemas.CatBreed,
+    response_model=schemas.CatBreedResponse,
     status_code=status.HTTP_200_OK,
     tags=["Breeds"],
 )
