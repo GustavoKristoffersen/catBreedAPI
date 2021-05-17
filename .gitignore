@@ -4,5 +4,4 @@ venv
 __pycache__
 my_database.db
 test.db
-
-
+registered_logs.log

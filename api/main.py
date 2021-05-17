@@ -1,15 +1,29 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from sqlalchemy.orm.session import Session
+import logging
 
 from . import models, schemas
 from .database import SessionLocal, engine
 from . import crud
+from .logs.custom_logging import CustomizeLogger
 
 from typing import List, Union
 
+
+def create_app() -> FastAPI:
+    logger = logging.getLogger(__name__)
+    app = FastAPI(title='catAPI')
+    logger = CustomizeLogger.make_logger('./api/logs/logging_config.json')
+    app.logger = logger
+
+    return app
+
+
+app = create_app()
+
+
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
 
 # Dependency
 def get_db():
