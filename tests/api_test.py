@@ -174,6 +174,10 @@ def test_update_breed_that_does_not_exist_should_fail() -> None:
 
     assert response.json() == {'detail': f'Breed with id {id} does not exist'}
 
+def test_insert_value_less_than_zero_to_coat_length_should_fail() -> None:
+    response = client.patch('breeds/1', json={'coat_length': -1})
+
+    assert response.status_code == 422
 
 def test_delete_breed_should_suceed() -> None:
     id = 1
