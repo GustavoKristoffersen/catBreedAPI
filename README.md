@@ -36,4 +36,4 @@ O testes se encontram na pasta 'tests'. Para executá-los, execute o comando aba
 
 ### Logs
 
-Toda requisição feita à API é salva no arquivo 'registered_logs' que é criado no momento da inicialização da aplicação, no diretório '/.api/logs'
+Toda requisição feita à API é salva no arquivo 'registered_logs' que é criado no momento da inicialização da aplicação, no diretório './api/logs'
