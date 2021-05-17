@@ -7,7 +7,7 @@ from . import models
 
 def create_breed(breed: schemas.CatBreedRequest, db: Session):
     '''
-    Create a new breed in the database.
+    Creates a new breed in the database.
     '''
 
     if db.query(models.Breed).filter_by(name=breed.name).first():
@@ -31,9 +31,8 @@ def create_breed(breed: schemas.CatBreedRequest, db: Session):
 
 
 def get_breeds_list(db: Session):
-
     '''
-    Return all breeds in the database
+    Returns all breeds in the database
     '''
 
     return db.query(models.Breed)
@@ -41,7 +40,7 @@ def get_breeds_list(db: Session):
 
 def get_single_breed(id: int, db: Session):
     '''
-    Get a single breed from the database.
+    returns a single breed from the database.
     '''
 
     db_breed = db.query(models.Breed).filter_by(id=id).first()
@@ -56,7 +55,7 @@ def get_single_breed(id: int, db: Session):
 
 def update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
     '''
-    Update a single breed in the database.
+    Updates a single breed in the database.
     '''
 
     db_breed = db.query(models.Breed).filter_by(id=id)
@@ -82,7 +81,7 @@ def update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
 
 def partially_update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
     '''
-    Partially update a single breed in the database.
+    Partially updates a single breed in the database.
     You can pass only the data you want to update.
     e.g. {'name': 'new name"}
     '''
@@ -111,7 +110,7 @@ def partially_update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
 
 def delete_breed(id: int, db: Session):
     '''
-    Delete a single breed from the database.
+    Deletes a single breed from the database.
     '''
 
     db_breed = db.query(models.Breed).filter_by(id=id).first()
