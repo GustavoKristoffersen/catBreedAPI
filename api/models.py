@@ -10,6 +10,6 @@ class Breed(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True)
     location_of_origin = Column(String)
-    coat_length = Column(Numeric, CheckConstraint("coat_length > 0"))
+    coat_length = Column(String) #Salvo como String devido à limitações do sqlite
     body_type = Column(String)
     pattern = Column(String)
