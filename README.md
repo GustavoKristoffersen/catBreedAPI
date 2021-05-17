@@ -22,7 +22,7 @@ Após clonar o projeto e criar o ambiente virtual, execute os seguintes comandos
 
 ### Documentação
 
-A documentação dos endpoints pode ser acessado acessando:
+A documentação dos endpoints pode ser acessada nas rotas:
 
         <BASE_URL>/docs
 
