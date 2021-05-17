@@ -37,8 +37,9 @@ def test_post_breed_should_succeed() -> None:
 })
     
     assert response.status_code == 201
+    id = response.json()["id"]
 
-    response = client.get('/breeds/1')
+    response = client.get(f'/breeds/{id}')
 
     response_content = response.json()
 
@@ -70,10 +71,13 @@ def test_post_multiple_breeds_should_suceed() -> None:
     assert response.status_code == 201 
     assert type(response.json()) == list
 
-    response = client.get('/breeds?name=test2')
+    id = response.json()[0]['id']
+    id2 = response.json()[1]['id']
+
+    response = client.get(f'/breeds/{id}')
     assert response.status_code == 200
 
-    response = client.get('/breeds?name=test3')
+    response = client.get(f'/breeds/{id2}')
     assert response.status_code == 200
 
 
@@ -113,11 +117,9 @@ def test_get_filtered_breed_should_succeed() -> None:
     
     assert response.status_code == 200
 
-
     response_content = response.json()
 
     assert type(response_content) == list
-    assert response_content[0]['id'] == 2
     assert response_content[0]['body_type'] == 'test2'
     assert response_content[0]['name'] == 'test2'
 
@@ -156,7 +158,7 @@ def test_partially_update_breed_should_suceed() -> None:
     assert response.json()['body_type'] == 'altered_test2'
 
 
-def test_update_breed_with_exiting_name_should_fail() -> None:
+def test_update_breed_with_existing_name_should_fail() -> None:
     response = client.patch('/breeds/3', json={'name': 'test1'})
 
     assert response.status_code == 400
