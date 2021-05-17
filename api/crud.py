@@ -6,6 +6,10 @@ from . import models
 
 
 def create_breed(breed: schemas.CatBreedRequest, db: Session):
+    '''
+    Create a new breed in the database.
+    '''
+
     if db.query(models.Breed).filter_by(name=breed.name).first():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -28,10 +32,18 @@ def create_breed(breed: schemas.CatBreedRequest, db: Session):
 
 def get_breeds_list(db: Session):
 
+    '''
+    Return all breeds in the database
+    '''
+
     return db.query(models.Breed)
 
 
 def get_single_breed(id: int, db: Session):
+    '''
+    Get a single breed from the database.
+    '''
+
     db_breed = db.query(models.Breed).filter_by(id=id).first()
     if not db_breed:
         raise HTTPException(
@@ -43,6 +55,10 @@ def get_single_breed(id: int, db: Session):
 
 
 def update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
+    '''
+    Update a single breed in the database.
+    '''
+
     db_breed = db.query(models.Breed).filter_by(id=id)
 
     if not db_breed.first():
@@ -65,6 +81,12 @@ def update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
 
 
 def partially_update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
+    '''
+    Partially update a single breed in the database.
+    You can pass only the data you want to update.
+    e.g. {'name': 'new name"}
+    '''
+
     db_breed = db.query(models.Breed).filter_by(id=id)
 
     if not db_breed.first():
@@ -88,6 +110,10 @@ def partially_update_breed(id: int, breed: schemas.CatBreedUpdate, db: Session):
 
 
 def delete_breed(id: int, db: Session):
+    '''
+    Delete a single breed from the database.
+    '''
+
     db_breed = db.query(models.Breed).filter_by(id=id).first()
 
     if not db_breed:

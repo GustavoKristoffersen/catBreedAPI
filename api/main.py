@@ -127,5 +127,5 @@ async def partially_update(id: int, request: schemas.CatBreedUpdate, db: Session
 
 @app.delete("/breeds/{id}", response_model=dict, status_code=status.HTTP_200_OK, tags=["Breeds"])
 async def destroy(id: int, db: Session = Depends(get_db)):
-    if crud.delete_breed(id=id, db=db):
-        return {"message": f"item with id {id} deleted"}
+    crud.delete_breed(id=id, db=db)
+    return {"message": f"item with id {id} deleted"}
