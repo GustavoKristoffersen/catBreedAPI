@@ -107,7 +107,7 @@ async def get_detail(id: int, db: Session = Depends(get_db)):
     status_code=status.HTTP_200_OK,
     tags=["Breeds"],
 )
-async def update(id: int, request: schemas.CatBreedUpdate, db: Session = Depends(get_db)):
+async def update(id: int, request: schemas.CatBreedRequest, db: Session = Depends(get_db)):
     response = crud.update_breed(id=id, breed=request, db=db)
 
     return response
